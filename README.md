@@ -1,160 +1,350 @@
-# REST API Starter
+# Hello World with Encore.ts
 
-This is a RESTful API Starter with a single Hello World API endpoint.
+> A beginner-friendly template demonstrating REST API development with Encore.ts framework
 
-## Prerequisites 
+[![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.2.2-blue.svg)](https://www.typescriptlang.org/)
+[![Encore](https://img.shields.io/badge/Encore-1.47.3-purple.svg)](https://encore.dev/)
+[![Issues](https://img.shields.io/github/issues/guilherme098/hello-word-with-encore)](https://github.com/guilherme098/hello-word-with-encore/issues)
 
-**Install Encore:**
-- **macOS:** `brew install encoredev/tap/encore`
-- **Linux:** `curl -L https://encore.dev/install.sh | bash`
-- **Windows:** `iwr https://encore.dev/install.ps1 | iex`
+## Table of Contents
 
-## Create app
+- [Project Overview](#project-overview)
+- [Getting Started](#getting-started)
+- [Usage & Examples](#usage--examples)
+- [Architecture & Design](#architecture--design)
+- [API Reference](#api-reference)
+- [Testing](#testing)
+- [Contributing](#contributing)
+- [Roadmap & License](#roadmap--license)
 
-Create a local app from this template:
+## Project Overview
 
-```bash
-encore app create my-app-name --example=ts/hello-world
-```
+**Hello World with Encore.ts** is a minimal REST API starter project designed to help developers learn the fundamentals of building backend services with [Encore.ts](https://encore.dev/). This template demonstrates core concepts including service creation, API endpoints, and local development workflows.
 
-## Run app locally
+### Goals
 
-Run this command from your application's root folder:
+- Provide a simple entry point for Encore.ts beginners
+- Demonstrate best practices for TypeScript-based backend development
+- Showcase Encore's developer experience and tooling
 
-```bash
-encore run
-```
-### Using the API
+### Target Audience
 
-To see that your app is running, you can ping the API.
+- Developers new to Encore.ts framework
+- TypeScript developers exploring backend development
+- Students learning modern API development patterns
 
-```bash
-curl http://localhost:4000/hello/World
-```
+### Core Features
 
-### Local Development Dashboard
+- ✅ Single REST API endpoint with path parameters
+- ✅ TypeScript-first development with strict type checking
+- ✅ Built-in development dashboard and tracing
+- ✅ Unit testing with Vitest
+- ✅ One-command deployment to cloud platforms
+- ✅ Automatic API documentation generation
 
-While `encore run` is running, open [http://localhost:9400/](http://localhost:9400/) to access Encore's [local developer dashboard](https://encore.dev/docs/observability/dev-dash).
+## Getting Started
 
-Here you can see traces for all requests that you made, see your architecture diagram (just a single service for this simple example), and view API documentation in the Service Catalog.
+### Prerequisites
 
-## Development
+Before you begin, ensure you have the following installed:
 
-### Add a new service
-
-To create a new microservice, add a file named encore.service.ts in a new directory.
-The file should export a service definition by calling `new Service`, imported from `encore.dev/service`.
-
-```ts
-import { Service } from "encore.dev/service";
-
-export default new Service("my-service");
-```
-
-Encore will now consider this directory and all its subdirectories as part of the service.
-
-Learn more in the docs: https://encore.dev/docs/ts/primitives/services
-
-### Add a new endpoint
-
-Create a new `.ts` file in your new service directory and write a regular async function within it. Then to turn it into an API endpoint, use the `api` function from the `encore.dev/api` module. This function designates it as an API endpoint.
-
-Learn more in the docs: https://encore.dev/docs/ts/primitives/defining-apis
-
-### Service-to-service API calls
-
-Calling API endpoints between services looks like regular function calls with Encore.ts.
-The only thing you need to do is import the service you want to call from `~encore/clients` and then call its API endpoints like functions.
-
-In the example below, we import the service `hello` and call the `ping` endpoint using a function call to `hello.ping`:
-
-```ts
-import { hello } from "~encore/clients"; // import 'hello' service
-
-export const myOtherAPI = api({}, async (): Promise<void> => {
-  const resp = await hello.ping({ name: "World" });
-  console.log(resp.message); // "Hello World!"
-});
-```
-
-Learn more in the docs: https://encore.dev/docs/ts/primitives/api-calls
-
-### Add a database
-
-To create a database, import `encore.dev/storage/sqldb` and call `new SQLDatabase`, assigning the result to a top-level variable. For example:
-
-```ts
-import { SQLDatabase } from "encore.dev/storage/sqldb";
-
-// Create the todo database and assign it to the "db" variable
-const db = new SQLDatabase("todo", {
-  migrations: "./migrations",
-});
-```
-
-Then create a directory `migrations` inside the service directory and add a migration file `0001_create_table.up.sql` to define the database schema. For example:
-
-```sql
-CREATE TABLE todo_item (
-  id BIGSERIAL PRIMARY KEY,
-  title TEXT NOT NULL,
-  done BOOLEAN NOT NULL DEFAULT false
-  -- etc...
-);
-```
-
-Once you've added a migration, restart your app with `encore run` to start up the database and apply the migration. Keep in mind that you need to have [Docker](https://docker.com) installed and running to start the database.
-
-Learn more in the docs: https://encore.dev/docs/ts/primitives/databases
-
-### Learn more
-
-There are many more features to explore in Encore.ts, for example:
-
-- [Request Validation](https://encore.dev/docs/ts/primitives/validation)
-- [Streaming APIs](https://encore.dev/docs/ts/primitives/streaming-apis)
-- [Cron jobs](https://encore.dev/docs/ts/primitives/cron-jobs)
-- [Pub/Sub](https://encore.dev/docs/ts/primitives/pubsub)
-- [Object Storage](https://encore.dev/docs/ts/primitives/object-storage)
-- [Secrets](https://encore.dev/docs/ts/primitives/secrets)
-- [Authentication handlers](https://encore.dev/docs/ts/develop/auth)
-- [Middleware](https://encore.dev/docs/ts/develop/middleware)
-
-## Deployment
-
-### Self-hosting
-
-See the [self-hosting instructions](https://encore.dev/docs/self-host/docker-build) for how to use `encore build docker` to create a Docker image and configure it.
-
-### Encore Cloud Platform
-
-Deploy your application to a free staging environment in Encore's development cloud using `git push encore`:
+- **Node.js** (v18 or higher) - [Download](https://nodejs.org/)
+- **npm** (comes with Node.js)
+- **Encore CLI** - Install using one of the methods below:
 
 ```bash
-git add -A .
-git commit -m 'Commit message'
+# macOS
+brew install encoredev/tap/encore
+
+# Linux
+curl -L https://encore.dev/install.sh | bash
+
+# Windows (PowerShell)
+iwr https://encore.dev/install.ps1 | iex
+```
+
+### Installation & Setup
+
+1. **Create a new project from this template:**
+
+   ```bash
+   encore app create my-hello-app --example=ts/hello-world
+   cd my-hello-app
+   ```
+
+2. **Or clone this repository:**
+
+   ```bash
+   git clone https://github.com/guilherme098/hello-word-with-encore.git
+   cd hello-word-with-encore
+   npm install
+   ```
+
+3. **Start the development server:**
+
+   ```bash
+   encore run
+   ```
+
+4. **Verify the installation:**
+
+   ```bash
+   curl http://localhost:4000/hello/World
+   ```
+
+   Expected response:
+
+   ```json
+   { "message": "Hello World!" }
+   ```
+
+### Quick Start Example
+
+Once your server is running, you can interact with the API:
+
+```bash
+# Basic greeting
+curl http://localhost:4000/hello/Alice
+# Response: {"message": "Hello Alice!"}
+
+# Try different names
+curl http://localhost:4000/hello/Developer
+# Response: {"message": "Hello Developer!"}
+```
+
+Access the development dashboard at [http://localhost:9400](http://localhost:9400) to explore:
+
+- API documentation
+- Request traces and performance metrics
+- Service architecture visualization
+
+## Usage & Examples
+
+### Common Workflows
+
+**1. Making API Calls**
+
+```bash
+# Using curl
+curl http://localhost:4000/hello/YourName
+
+# Using JavaScript fetch
+const response = await fetch('http://localhost:4000/hello/YourName');
+const data = await response.json();
+console.log(data.message); // "Hello YourName!"
+```
+
+**2. Running Tests**
+
+```bash
+# Run all tests
+encore test
+
+# Run tests with coverage
+npm test
+```
+
+**3. Building for Production**
+
+```bash
+# Create Docker image
+encore build docker my-app
+
+# Deploy to Encore Cloud
+git add .
+git commit -m "Deploy to cloud"
 git push encore
 ```
 
-You can also open your app in the [Cloud Dashboard](https://app.encore.dev) to integrate with GitHub, or connect your AWS/GCP account, enabling Encore to automatically handle cloud deployments for you.
+### Configuration Options
 
-## Link to GitHub
+The project uses standard Encore.ts configuration:
 
-Follow these steps to link your app to GitHub:
+**encore.app** - Main app configuration:
 
-1. Create a GitHub repo, commit and push the app.
-2. Open your app in the [Cloud Dashboard](https://app.encore.dev).
-3. Go to **Settings ➔ GitHub** and click on **Link app to GitHub** to link your app to GitHub and select the repo you just created.
-4. To configure Encore to automatically trigger deploys when you push to a specific branch name, go to the **Overview** page for your intended environment. Click on **Settings** and then in the section **Branch Push** configure the **Branch name** and hit **Save**.
-5. Commit and push a change to GitHub to trigger a deploy.
+```json
+{
+  "id": "",
+  "lang": "typescript"
+}
+```
 
-[Learn more in the docs](https://encore.dev/docs/how-to/github)
+**tsconfig.json** - TypeScript settings with strict mode enabled and ES2022 target.
 
+## Architecture & Design
+
+### High-Level Architecture
+
+```
+┌─────────────────┐    HTTP GET     ┌──────────────────┐
+│   HTTP Client   │ ─────────────► │   Encore.ts      │
+│                 │                │   Runtime        │
+└─────────────────┘                └──────────────────┘
+                                            │
+                                            ▼
+                                   ┌──────────────────┐
+                                   │  Hello Service   │
+                                   │                  │
+                                   │  GET /hello/:name│
+                                   └──────────────────┘
+```
+
+### Key Components
+
+1. **Service Definition** (`hello/encore.service.ts`)
+
+   - Defines the "hello" microservice
+   - Establishes service boundaries
+
+2. **API Endpoint** (`hello/hello.ts`)
+
+   - Implements the GET `/hello/:name` endpoint
+   - Handles request/response logic with type safety
+
+3. **Test Suite** (`hello/hello.test.ts`)
+   - Unit tests for API functionality
+   - Demonstrates testing patterns
+
+### Data Flow
+
+1. HTTP request received at `/hello/:name`
+2. Encore router extracts `name` parameter
+3. Handler function processes request
+4. Response formatted as JSON with greeting message
+5. HTTP response sent to client
+
+## API Reference
+
+### Endpoints
+
+#### GET /hello/:name
+
+Returns a personalized greeting message.
+
+**Parameters:**
+
+- `name` (string, required) - Name to include in greeting
+
+**Request:**
+
+```http
+GET /hello/World HTTP/1.1
+Host: localhost:4000
+```
+
+**Response:**
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "message": "Hello World!"
+}
+```
+
+**Example Usage:**
+
+```bash
+curl http://localhost:4000/hello/Alice
+```
 
 ## Testing
 
-To run tests, configure the `test` command in your `package.json` to the test runner of your choice, and then use the command `encore test` from the CLI. The `encore test` command sets up all the necessary infrastructure in test mode before handing over to the test runner. [Learn more](https://encore.dev/docs/ts/develop/testing)
+### Running Tests
 
 ```bash
+# Run all tests
 encore test
+
+# Run tests in watch mode
+npm test
+
+# Run with verbose output
+npm test -- --reporter=verbose
 ```
+
+### Test Structure
+
+The project includes unit tests using Vitest:
+
+```typescript
+// hello/hello.test.ts
+import { describe, expect, test } from "vitest";
+import { get } from "./hello";
+
+describe("get", () => {
+  test("should combine string with parameter value", async () => {
+    const resp = await get({ name: "world" });
+    expect(resp.message).toBe("Hello world!");
+  });
+});
+```
+
+### Writing Additional Tests
+
+To add more tests, create `.test.ts` files in your service directories. Encore automatically discovers and runs them.
+
+## Contributing
+
+We welcome contributions to improve this learning template!
+
+### Code Style Guidelines
+
+- Follow TypeScript best practices
+- Use meaningful variable and function names
+- Add JSDoc comments for public APIs
+- Maintain consistent indentation (2 spaces)
+
+### Development Workflow
+
+1. **Fork the repository**
+2. **Create a feature branch:**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+3. **Make your changes and add tests**
+4. **Run the test suite:**
+   ```bash
+   encore test
+   ```
+5. **Commit your changes:**
+   ```bash
+   git commit -m "Add: your feature description"
+   ```
+6. **Push to your fork and submit a pull request**
+
+### Reporting Issues
+
+- Use the [GitHub issue tracker](https://github.com/guilherme098/hello-word-with-encore/issues)
+- Provide clear reproduction steps
+- Include error messages and environment details
+
+## Roadmap & License
+
+### Current Status
+
+This project is a stable learning template suitable for Encore.ts beginners.
+
+### Future Considerations
+
+While this template focuses on simplicity, developers can extend it with:
+
+- Database integration
+- Authentication systems
+- Additional API endpoints
+- Middleware implementation
+
+### License
+
+This project is licensed under the Mozilla Public License 2.0 - see the [LICENSE](LICENSE) file for details.
+
+---
+
+**Ready to build something amazing?** 🚀
+
+- 📚 [Encore.ts Documentation](https://encore.dev/docs/ts)
+- 💬 [Community Discord](https://encore.dev/discord)
+- 🐛 [Report Issues](https://github.com/guilherme098/hello-word-with-encore/issues)
+- ⭐ [Star this repo](https://github.com/guilherme098/hello-word-with-encore) if it helped you learn!
